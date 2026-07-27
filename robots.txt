@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://musabglobal2027.github.io/musab-website/sitemap.xml
