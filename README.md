@@ -1,1 +1,0 @@
-MUS'AB Global Resources.
