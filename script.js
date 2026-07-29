@@ -286,6 +286,15 @@ if (contactForm) {
 
         e.preventDefault();
 
+        // Honeypot check: if this hidden field has a value, it's almost
+        // certainly a bot. Pretend success so the bot doesn't adapt, but
+        // never actually send the message.
+        const honeypot = contactForm.querySelector('[name="website"]');
+        if (honeypot && honeypot.value.trim() !== "") {
+            contactForm.reset();
+            return;
+        }
+
         const submitBtn = contactForm.querySelector('button[type="submit"]');
         const originalText = submitBtn ? submitBtn.textContent : "";
         if (submitBtn) {
