@@ -28,6 +28,20 @@
 <meta property="og:site_name" content="MUS'AB Global Resources">
 <meta property="og:locale" content="en_NG">
 
+<!-- Security headers (via meta, since GitHub Pages doesn't allow custom HTTP headers) -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com;
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: https:;
+  connect-src 'self' https://api.emailjs.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com;
+  frame-src https://www.google.com;
+  font-src 'self';
+  object-src 'none';
+  base-uri 'self';
+">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 <meta name="twitter:card" content="summary_large_image">
 
 <meta name="twitter:title" content="MUS'AB Global Resources">
@@ -408,6 +422,9 @@ I will always come back."
   <input type="email" name="email" placeholder="Your Email" required>
 
   <textarea name="message" placeholder="Your Message" required></textarea>
+
+  <!-- Honeypot: hidden from real visitors, but spam bots often fill every field -->
+  <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
 
   <button type="submit">Send Message</button>
 
