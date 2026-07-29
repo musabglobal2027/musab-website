@@ -37,6 +37,8 @@
 <link rel="canonical" href="https://musabglobal2027.github.io/musab-website/">
 
 <link rel="icon" type="image/png" href="logo.png">
+<link rel="preload" as="image" href="hero1.jpg" fetchpriority="high">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
 
  <link rel="stylesheet" href="style.css">
  <meta name="theme-color" content="#0b5d3b">
@@ -84,7 +86,7 @@
   </div>
 
   <div class="logo">
-  <img src="logo.png" alt="MUS'AB Global Resources">
+  <img src="logo.png" alt="MUS'AB Global Resources" decoding="async">
   </div>
   <nav id="navMenu">
       <a href="#home">Home</a>
@@ -279,13 +281,13 @@
 
 <div class="gallery-container">
 
-<img src="ceo.jpg.png" onclick="openImage(this.src)" alt="CEO Musa Abdullahi">
+<img src="ceo.jpg.png" onclick="openImage(this.src)" alt="CEO Musa Abdullahi" loading="lazy" decoding="async">
 
-<img src="hero1.jpg" onclick="openImage(this.src)" alt="Our work">
+<img src="hero1.jpg" onclick="openImage(this.src)" alt="Our work" loading="lazy" decoding="async">
 
-<img src="hero2.jpg" onclick="openImage(this.src)" alt="Our services">
+<img src="hero2.jpg" onclick="openImage(this.src)" alt="Our services" loading="lazy" decoding="async">
 
-<img src="hero3.jpg" onclick="openImage(this.src)" alt="Our business">
+<img src="hero3.jpg" onclick="openImage(this.src)" alt="Our business" loading="lazy" decoding="async">
 
 </div>
 
@@ -388,13 +390,7 @@ I will always come back."
 
  </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-  <script>
-  emailjs.init("1uDRilufiTbiTvJ0l");
-  </script>
-
-   <script src="script.js"></script>
+   <script src="script.js" defer></script>
 
     <a href="https://wa.me/2348087017662"
 class="whatsapp"
