@@ -1,4 +1,52 @@
 // ==========================
+// Premium Hero Image Slider
+// ==========================
+
+(function () {
+    const slides = document.querySelectorAll(".hero-slide");
+    const dots = document.querySelectorAll(".hero-dot");
+    if (!slides.length) return;
+
+    let current = 0;
+    let timer = null;
+    const INTERVAL = 5000;
+
+    function goTo(index) {
+        slides[current].classList.remove("active");
+        dots[current] && dots[current].classList.remove("active");
+        current = (index + slides.length) % slides.length;
+        slides[current].classList.add("active");
+        dots[current] && dots[current].classList.add("active");
+    }
+
+    function next() { goTo(current + 1); }
+
+    function start() {
+        stop();
+        timer = setInterval(next, INTERVAL);
+    }
+
+    function stop() {
+        if (timer) clearInterval(timer);
+    }
+
+    dots.forEach(dot => {
+        dot.addEventListener("click", () => {
+            goTo(parseInt(dot.dataset.slide, 10));
+            start(); // reset timer after manual navigation
+        });
+    });
+
+    // Pause the slider when the tab isn't visible (saves battery/CPU)
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) stop();
+        else start();
+    });
+
+    start();
+})();
+
+// ==========================
 // Mobile Menu
 // ==========================
 
