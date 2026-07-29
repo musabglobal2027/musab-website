@@ -526,6 +526,18 @@ nav a:hover{
     min-height:150px;
 }
 
+.hp-field{
+    position:absolute !important;
+    left:-9999px !important;
+    top:auto;
+    width:1px !important;
+    height:1px !important;
+    overflow:hidden;
+    opacity:0;
+    margin:0 !important;
+    padding:0 !important;
+}
+
 .contact-form button{
     padding:15px;
     background:#0b5d3b;
