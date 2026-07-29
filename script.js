@@ -103,15 +103,24 @@ window.addEventListener("scroll", () => {
 window.dispatchEvent(new Event("scroll"));
 
 // ==========================
-// Loader
+// Loader (hides fast, doesn't wait on slow resources like the map iframe)
 // ==========================
 
-window.addEventListener("load", function () {
+function hideLoader() {
     const loader = document.getElementById("loader");
-    if (loader) {
+    if (loader && loader.style.display !== "none") {
         loader.style.display = "none";
     }
-});
+}
+
+if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(hideLoader, 250);
+} else {
+    document.addEventListener("DOMContentLoaded", () => setTimeout(hideLoader, 250));
+}
+// Safety net in case something above doesn't fire
+window.addEventListener("load", hideLoader);
+setTimeout(hideLoader, 2500);
 
 // ==========================
 // Back To Top
@@ -225,30 +234,82 @@ if(year){
     year.innerHTML = new Date().getFullYear();
 }
 
-// ===== Contact Form EmailJS =====
+// ===== Contact Form EmailJS (lazy-loaded for faster page load) =====
 
 const contactForm = document.getElementById("contact-form");
+let emailjsReady = false;
+let emailjsLoading = null;
+
+function loadEmailJS() {
+    if (emailjsLoading) return emailjsLoading;
+
+    emailjsLoading = new Promise((resolve, reject) => {
+        if (window.emailjs) {
+            emailjsReady = true;
+            resolve();
+            return;
+        }
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+        script.onload = () => {
+            emailjs.init("1uDRilufiTbiTvJ0l");
+            emailjsReady = true;
+            resolve();
+        };
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+
+    return emailjsLoading;
+}
 
 if (contactForm) {
 
-    contactForm.addEventListener("submit", function(e) {
+    // Start loading EmailJS as soon as the contact section is near the viewport,
+    // so it's ready by the time the user finishes typing (no wait on submit).
+    if ("IntersectionObserver" in window) {
+        const contactObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    loadEmailJS();
+                    contactObserver.disconnect();
+                }
+            });
+        }, { rootMargin: "300px" });
+        contactObserver.observe(contactForm);
+    }
+
+    // Also start loading the moment the user interacts with the form
+    contactForm.addEventListener("focusin", () => loadEmailJS(), { once: true });
+
+    contactForm.addEventListener("submit", function (e) {
 
         e.preventDefault();
 
-        emailjs.sendForm(
-            "service_ohsd8mq",
-            "template_jeyc1la",
-            this
-        ).then(function() {
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn ? submitBtn.textContent : "";
+        if (submitBtn) {
+            submitBtn.textContent = "Sending...";
+            submitBtn.disabled = true;
+        }
+
+        loadEmailJS().then(() => {
+            return emailjs.sendForm("service_ohsd8mq", "template_jeyc1la", contactForm);
+        }).then(function () {
 
             alert("✅ Message sent successfully!");
             contactForm.reset();
 
-        }, function(error) {
+        }).catch(function (error) {
 
-            alert("❌ Failed to send message.");
+            alert("❌ Failed to send message. Please try WhatsApp or call us instead.");
             console.log(error);
 
+        }).finally(() => {
+            if (submitBtn) {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
         });
 
     });
