@@ -13,6 +13,15 @@ html{
     scroll-behavior:smooth;
 }
 
+/* Prevents the fixed header from covering section titles when
+   jumping to a #section via nav links */
+section[id]{
+    scroll-margin-top:110px;
+}
+@media (max-width:768px){
+    section[id]{ scroll-margin-top:85px; }
+}
+
 body{
     font-family:Arial,sans-serif;
     background:#f5f5f5;
@@ -79,10 +88,13 @@ nav a:hover{
     color:white;
     font-size:18px;
     cursor:pointer;
+    transition:transform .3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .3s ease, background .3s ease;
 }
 
 .hero button:hover{
     background:#08472d;
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(0,0,0,.3);
 }
 .hero{
     position:relative;
@@ -284,6 +296,7 @@ nav a:hover{
     transform:translateY(-10px);
     background:#0b5d3b;
     color:#fff;
+    transition:transform .3s ease, background .3s ease, color .3s ease;
 }
 
 .service-card h3{
@@ -329,7 +342,8 @@ nav a:hover{
 
 .why-card:hover{
     background:#FFD700;
-    transform:translateY(-10px);
+    transform:translateY(-10px) scale(1);
+    transition:transform .3s ease, background .3s ease;
 }
 
 .why-card h3{
@@ -446,6 +460,7 @@ nav a:hover{
     transform:translateY(-8px);
     background:#0b5d3b;
     color:#fff;
+    transition:transform .3s ease, background .3s ease, color .3s ease;
 }
 
 .testimonial-card h4{
@@ -561,7 +576,24 @@ nav a:hover{
     text-decoration:none;
     box-shadow:0 8px 20px rgba(0,0,0,.3);
     z-index:999;
-    transition:.3s;
+    animation:whatsappPulse 2.5s ease-in-out infinite;
+}
+
+.whatsapp:hover{
+    animation-play-state:paused;
+}
+
+@keyframes whatsappPulse{
+    0%, 100%{
+        box-shadow:0 8px 20px rgba(0,0,0,.3), 0 0 0 0 rgba(37,211,102,.55);
+    }
+    50%{
+        box-shadow:0 8px 20px rgba(0,0,0,.3), 0 0 0 12px rgba(37,211,102,0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .whatsapp{ animation:none; }
 }
 
 .whatsapp:hover{
@@ -644,15 +676,31 @@ header{
 }
 
 nav a{
+    position:relative;
     color:#fff;
     text-decoration:none;
     margin-left:25px;
     font-weight:bold;
-    transition:.3s;
+    transition:color .3s;
+}
+
+nav a::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:-4px;
+    width:0%;
+    height:2px;
+    background:#FFD700;
+    transition:width .3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 nav a:hover{
     color:#FFD700;
+}
+
+nav a:hover::after{
+    width:100%;
 }
 
 @media (max-width:768px){
@@ -713,12 +761,16 @@ body.dark .footer{
 section{
     opacity:0;
     transform:translateY(50px);
-    transition:all .8s ease;
+    transition:opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 section.show{
     opacity:1;
     transform:translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+    section{ opacity:1; transform:none; transition:none; }
 }
 
 /* ===== GOOGLE MAP ===== */
@@ -770,7 +822,9 @@ section.show{
 /* ===== BACK TO TOP ===== */
 
 #topBtn{
-    display:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     position:fixed;
     bottom:100px;
     right:20px;
@@ -784,6 +838,21 @@ section.show{
     cursor:pointer;
     box-shadow:0 8px 20px rgba(0,0,0,.3);
     z-index:999;
+    opacity:0;
+    transform:translateY(15px) scale(.85);
+    pointer-events:none;
+    transition:opacity .35s cubic-bezier(0.16, 1, 0.3, 1), transform .35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#topBtn.visible{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:auto;
+}
+
+@media (prefers-reduced-motion: reduce){
+    #topBtn{ transition:opacity .2s linear; transform:none; }
+    #topBtn.visible{ transform:none; }
 }
 
 #topBtn:hover{
@@ -962,7 +1031,7 @@ body{
 .service-card{
     opacity:0;
     transform:translateY(40px);
-    transition:all .8s ease;
+    transition:opacity .8s cubic-bezier(0.16, 1, 0.3, 1), transform .8s cubic-bezier(0.16, 1, 0.3, 1), background .4s, color .4s;
 }
 
 section.show .service-card{
@@ -971,23 +1040,110 @@ section.show .service-card{
 }
 
 .service-card:nth-child(2){
-    transition-delay:.2s;
+    transition-delay:.1s;
 }
 
 .service-card:nth-child(3){
-    transition-delay:.4s;
+    transition-delay:.2s;
 }
 
 .service-card:nth-child(4){
-    transition-delay:.6s;
+    transition-delay:.3s;
 }
 
 .service-card:nth-child(5){
-    transition-delay:.8s;
+    transition-delay:.4s;
 }
 
 .service-card:nth-child(6){
-    transition-delay:1s;
+    transition-delay:.5s;
+}
+
+.service-card:nth-child(7){
+    transition-delay:.6s;
+}
+
+/* ===== Why-Us Card Animation ===== */
+
+.why-card{
+    opacity:0;
+    transform:translateY(40px) scale(.96);
+    transition:opacity .8s cubic-bezier(0.16, 1, 0.3, 1), transform .8s cubic-bezier(0.16, 1, 0.3, 1), background .3s;
+}
+
+section.show .why-card{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+
+.why-card:nth-child(2){ transition-delay:.12s; }
+.why-card:nth-child(3){ transition-delay:.24s; }
+.why-card:nth-child(4){ transition-delay:.36s; }
+
+/* ===== Testimonial Card Animation ===== */
+
+.testimonial-card{
+    opacity:0;
+    transform:translateY(40px);
+    transition:opacity .8s cubic-bezier(0.16, 1, 0.3, 1), transform .8s cubic-bezier(0.16, 1, 0.3, 1), background .3s, color .3s;
+}
+
+section.show .testimonial-card{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.testimonial-card:nth-child(2){ transition-delay:.15s; }
+.testimonial-card:nth-child(3){ transition-delay:.3s; }
+
+/* ===== Gallery Image Animation ===== */
+
+.gallery-container img{
+    opacity:0;
+    transform:scale(.92);
+}
+
+section.show .gallery-container img{
+    opacity:1;
+    transform:scale(1);
+    transition:opacity .7s cubic-bezier(0.16, 1, 0.3, 1), transform .7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gallery-container img:hover{
+    transition:transform .3s ease, box-shadow .3s ease;
+}
+
+.gallery-container img:nth-child(2){ transition-delay:.1s !important; }
+.gallery-container img:nth-child(3){ transition-delay:.2s !important; }
+.gallery-container img:nth-child(4){ transition-delay:.3s !important; }
+
+/* ===== Stat Box Animation ===== */
+
+.stat-box{
+    opacity:0;
+    transform:translateY(30px);
+    transition:opacity .7s cubic-bezier(0.16, 1, 0.3, 1), transform .7s cubic-bezier(0.16, 1, 0.3, 1), background .3s, color .3s;
+}
+
+section.show .stat-box{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.stat-box:hover{
+    transition:transform .25s ease, background .25s ease, color .25s ease;
+}
+
+.stat-box:nth-child(2){ transition-delay:.1s; }
+.stat-box:nth-child(3){ transition-delay:.2s; }
+.stat-box:nth-child(4){ transition-delay:.3s; }
+
+@media (prefers-reduced-motion: reduce){
+    .service-card, .why-card, .testimonial-card, .gallery-container img, .stat-box{
+        opacity:1 !important;
+        transform:none !important;
+        transition:none !important;
+    }
 }
 
 /* ===== Premium Hero Text Animation ===== */
