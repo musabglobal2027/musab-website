@@ -133,9 +133,9 @@ if(topBtn){
 window.addEventListener("scroll", function(){
 
     if(document.documentElement.scrollTop > 300){
-        topBtn.style.display = "block";
+        topBtn.classList.add("visible");
     }else{
-        topBtn.style.display = "none";
+        topBtn.classList.remove("visible");
     }
 
 });
